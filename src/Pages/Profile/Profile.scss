@@ -1,8 +1,8 @@
 .profileMainLayout {
   height: 100%;
   display: grid;
-  grid-template-columns: 400px 1fr;
-  grid-template-rows: 50px 1fr;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 50px calc(100% - 65px);
   gap: 15px;
 
   h3 {
@@ -26,11 +26,21 @@
     span.ant-tag {
       font-size: 16px;
       padding: 5px;
+      user-select: none;
     }
 
     .branchAddTag {
       cursor: pointer;
-      user-select: none;
     }
+
+    .ant-spin-container .ant-list-item {
+      &:nth-child(odd) {
+        background: rgba(60, 90, 100, 0.04);
+      }
+    }
+  }
+
+  .profileInfo {
+    height: 100%;
   }
 }

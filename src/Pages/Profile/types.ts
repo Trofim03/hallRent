@@ -1,7 +1,9 @@
 export type CompanyBranchType = {
     name: string,
     address: string,
-    coords: number[]
+    coords: number[],
+    oneHourPrice: number,
+    premisesSize: number
 }
 
 export type CompanyOrderType = {
@@ -13,12 +15,6 @@ export type CompanyOrderType = {
 
 export type UserDataType = {
     companyName: string,
-    userCompanyCounter: number,
-    userNotActiveCompanyCounter: number,
-    minPrice: number,
-    maxPrice: number,
-    totalSizePremises: number,
-    activeOrders: number,
     companyBranches: CompanyBranchType[],
     ordersData: CompanyOrderType[]
 }

@@ -8,6 +8,7 @@ type ProfileParamsChartProps = {
 export const ProfileParamsChart = ({ordersData}: ProfileParamsChartProps) => {
     return (
         <Line
+            height={400}
             data={ordersData}
             xField={'date'}
             yField={'orders'}

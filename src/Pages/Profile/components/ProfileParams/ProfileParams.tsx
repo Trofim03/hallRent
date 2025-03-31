@@ -1,15 +1,36 @@
 import { PlusOutlined } from "@ant-design/icons"
-import { Typography, Flex, Tag, Tooltip } from "antd"
+import { Typography, Flex, Tag, Tooltip, List, Empty } from "antd"
 import { useState } from "react"
 import { AppModal } from "../../../../components"
 import { CompanyBranchType, UserDataType } from "../../types"
 import { ProfileParamsChart } from "../ProfileParammsChart"
+import { getResultUserInfo } from "./getResultUserInfo"
 
 const {Title} = Typography
+const {Item} = List
 
-export const ProfileParams = ({userData}: {userData: UserDataType}) => {
+type ProfileParamsProps = {
+    userData: UserDataType & {
+        activeTodayBranches: string[], 
+        notActiveTodayBranches: string[]
+    }
+}
+
+export const ProfileParams = ({userData}: ProfileParamsProps) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [branchToDeleteData, setBranchToDeleteData] = useState<CompanyBranchType | null>(null)
+
+    const {
+        activeTodayBranches,
+        ordersData,
+        notActiveTodayBranches
+    } = userData
+
+    const {
+        minPrice,
+        maxPrice,
+        totalSizePremises
+    } = getResultUserInfo(userData)
 
     const onBranchAdd = () => {
         setIsDrawerOpen(true)
@@ -45,26 +66,47 @@ export const ProfileParams = ({userData}: {userData: UserDataType}) => {
             <div className="profileParams">
                 <div>
                     <Title level={4}>Характеристики компании</Title>
-                    <Typography>Активных филиалов: {userData.userCompanyCounter}</Typography>
-                    <Typography>Неактивных филиалов: {userData.userNotActiveCompanyCounter}</Typography>
-                    <Typography>Минимальная стоимость аренды: {userData.minPrice}р</Typography>
-                    <Typography>Максимальная стоимость аренды: {userData.maxPrice}р</Typography>
-                    <Typography>Общий метраж всех помещений: {userData.totalSizePremises}м³</Typography>
-                    <Typography>Активных заказов: {userData.activeOrders}</Typography>
+                    <List bordered size="small">
+                        <Item>Активных филиалов (сегодня): {activeTodayBranches.length}</Item>
+                        <Item>Неактивных филиалов (сегодня): {notActiveTodayBranches.length}</Item>
+                        <Item>Минимальная стоимость аренды: {minPrice}р</Item>
+                        <Item>Максимальная стоимость аренды: {maxPrice}р</Item>
+                        <Item>Общий метраж всех помещений: {totalSizePremises}м³</Item>
+                    </List>
                 </div>
                 <div>
                     <Title level={4}>Текущие филиалы</Title>
-                    <Flex wrap={'wrap'}>
-                        {userData.companyBranches.map(el => (
-                            <Tooltip key={el.name} title={el.address}>
-                                <Tag closable onClose={(e) => onTagDelete(e, el)}>{el.name}</Tag>
+                    <Flex wrap={'wrap'} gap={5}>
+                        {userData.companyBranches.map(el => {
+                            const isBranchActive = activeTodayBranches.includes(el.name)
+
+                            const toolTipTitle = (
+                                <>
+                                    Адрес: {el.address}<br/>
+                                    Сегодня: {isBranchActive ? 'занято' : 'свободно'}
+                                </>
+                            )
+
+                            return (
+                            <Tooltip key={el.name} title={toolTipTitle}>
+                                <Tag
+                                color={isBranchActive ? 'red' : 'green'} 
+                                closable 
+                                onClose={(e) => onTagDelete(e, el)}
+                                >
+                                    {el.name}
+                                </Tag>
                             </Tooltip>
-                        ))}
+                        )
+                        })}
                         <Tag icon={<PlusOutlined />} onClick={onBranchAdd} className='branchAddTag'>
                             Добавить
                         </Tag>
                     </Flex>
-                    <ProfileParamsChart ordersData={userData.ordersData} />
+                    {!ordersData.length ? 
+                    <Empty description={'Отсутствуют заказы для отображения'} style={{marginTop: 30}} /> 
+                    : <ProfileParamsChart ordersData={ordersData} /> 
+                    }
                 </div>
             </div>
         </>

@@ -5,7 +5,7 @@ const { Content } = Layout;
 
 export const AppContent = () => {
     return (
-        <Content style={{ margin: '15px' }}>
+        <Content style={{ padding: '15px', maxHeight: '100vh' }}>
           <Outlet />
         </Content>
     )
