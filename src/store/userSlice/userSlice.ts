@@ -13,7 +13,7 @@ export const userSlice = createSlice({
     name: 'userSlice',
     initialState: initialUserState,
     reducers: {
-        setUserState: (store, {payload}: {payload: IUserState}) => {
+        setUserState: (_, {payload}: {payload: IUserState}) => {
             return {
                 ...payload
             }

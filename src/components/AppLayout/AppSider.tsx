@@ -1,4 +1,4 @@
-import { Button, Layout, Menu, MenuProps } from "antd"
+import { Layout, Menu, MenuProps } from "antd"
 import {
     UserOutlined, LogoutOutlined
 } from '@ant-design/icons';
@@ -26,7 +26,7 @@ const items: MenuItem[] = [
 export const AppSider = () => {
   const dispatch = useDispatch()
 
-  const onItemSelect = ({key}) => {
+  const onItemSelect = ({key}: {key: string}) => {
     if (key === items[1]?.key) {
       dispatch(clearUserState())
       localStorage.removeItem('user')
