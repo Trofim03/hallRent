@@ -1,0 +1,11 @@
+.HallMap {
+  width: 100%;
+  height: 100%;
+  & > ymaps {
+    &,
+    & > ymaps {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+}

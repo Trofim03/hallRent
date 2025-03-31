@@ -17,12 +17,12 @@ export const LogIn = () => {
     const onFinish = (fieldsValue: any) => {
         signInWithEmailAndPassword(auth, fieldsValue.email, fieldsValue.password)
         .then((userCredential) => {
-                    const userData: IUserState = {id: userCredential.user.uid, role: 'USER'}
-                    
-                    dispatch(setUserState(userData))
-                    saveLocalStorageData('user', userData)
-                })
-                .catch((error) => setError(error.code))
+            const userData: IUserState = {id: userCredential.user.uid, role: 'USER'}
+            
+            dispatch(setUserState(userData))
+            saveLocalStorageData('user', userData)
+        })
+        .catch((error) => setError(error.code))
     };
 
     return (
