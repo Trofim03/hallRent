@@ -1,4 +1,5 @@
-import { UserDataType } from "../../types"
+import { UserDataType } from "../../../../store/userSlice"
+
 
 export const getResultUserInfo = (userData: UserDataType) => {
     let minPrice = userData.companyBranches[0].oneHourPrice

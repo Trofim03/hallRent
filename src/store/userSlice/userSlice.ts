@@ -1,21 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { BranchesActiveDataType, IUserState, UserDataType } from "./types";
 
-export type UserRoleType = 'ADMIN' | 'USER' | null
-
-export type IUserState = {
-    id: string | null
-    role: UserRoleType
+const initialUserState: IUserState = {
+    id: null, 
+    userData: {
+        companyName: '',
+        companyBranches: [],
+        ordersData: [],
+        role: null
+    },
+    branchesActiveData: {
+        activeTodayBranches: [],
+        notActiveTodayBranches: []
+    }
 }
-
-const initialUserState: IUserState = {id: null, role: null}
 
 export const userSlice = createSlice({
     name: 'userSlice',
     initialState: initialUserState,
     reducers: {
-        setUserState: (_, {payload}: {payload: IUserState}) => {
+        setUserData: (store, {payload}: {payload: UserDataType}) => {
             return {
-                ...payload
+                ...store,
+                userData: {
+                    ...payload
+                }
+            }
+        },
+        setUserId: (store, {payload}: {payload: string}) => {
+            return {
+                ...store,
+                id: payload
+            }
+        },
+        setUserBranchesActiveData: (store, {payload}: {payload: BranchesActiveDataType}) => {
+            return {
+                ...store,
+                branchesActiveData: payload
             }
         },
         clearUserState: () => {

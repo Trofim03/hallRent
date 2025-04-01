@@ -29,7 +29,7 @@ export const AppSider = () => {
   const onItemSelect = ({key}: {key: string}) => {
     if (key === items[1]?.key) {
       dispatch(clearUserState())
-      localStorage.removeItem('user')
+      localStorage.removeItem('userId')
     }
   }
   

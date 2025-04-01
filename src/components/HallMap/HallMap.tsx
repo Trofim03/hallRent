@@ -1,14 +1,16 @@
 import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps';
 import './HallMap.scss'
+import { CompanyBranchType } from '../../store/userSlice';
+
+type PlaceMarkType = CompanyBranchType & {color: string}
 
 type HallMapProps = {
-    placeMarksData: {
-        coords: number[],
-        color: string
-    }[]
+    placeMarksData: PlaceMarkType[],
+    onMarkClick?: (mark: PlaceMarkType) => void,
+    onMapClick?: () => void
 }
 
-export const HallMap = ({placeMarksData}: HallMapProps) => {
+export const HallMap = ({placeMarksData, onMarkClick, onMapClick}: HallMapProps) => {
     const defaultCoords = [55.684758, 37.738521];
 
     const getCenterByCoords = () => {
@@ -28,13 +30,30 @@ export const HallMap = ({placeMarksData}: HallMapProps) => {
         zoom: 4,
       };
 
+      const setMapEvents = (inst: ymaps.Map) => {
+        if (onMapClick) {
+            inst?.events.add('click', onMapClick)
+        }
+      }
+
+      const setMarkEvents = (inst: ymaps.Map, mark: PlaceMarkType) => {
+        if (onMarkClick) {
+            inst?.events.add('click', () => onMarkClick(mark))
+        }
+      }
+
     return (
         <YMaps>
-            <Map defaultState={defaultState} className='HallMap'>
-                {placeMarksData.map(({coords, color}) => (
-                    <Placemark geometry={coords} key={String(coords)} options={{
-                        iconColor: color
-                    }}/>
+            <Map defaultState={defaultState} className='HallMap' instanceRef={setMapEvents}>
+                {placeMarksData.map((mark) => (
+                    <Placemark 
+                    geometry={mark.coords} 
+                    instanceRef={(inst) => setMarkEvents(inst, mark)} 
+                    key={String(mark.coords)} 
+                    options={{
+                        iconColor: mark.color
+                    }}
+                    />
                 ))}
             </Map>
         </YMaps>

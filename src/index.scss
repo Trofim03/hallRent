@@ -2,3 +2,14 @@ body {
   margin: 0;
   padding: 0;
 }
+
+*:has(> .ant-spin) {
+  position: relative;
+
+  .ant-spin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

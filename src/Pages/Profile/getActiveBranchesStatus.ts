@@ -1,5 +1,5 @@
+import { UserDataType } from "../../store/userSlice"
 import { getArrayFromMapSet } from "../../utils"
-import { UserDataType } from "./types"
 
 export const getActiveBranchesStatus = (userData: UserDataType) => {
     const notActiveTodayBranches = new Map()
@@ -14,9 +14,11 @@ export const getActiveBranchesStatus = (userData: UserDataType) => {
     const todayDate = today.getDate()
 
     userData.ordersData.forEach(order => {
-        const orderYear = order.date.getFullYear()
-        const orderMonth = order.date.getMonth()
-        const orderDate = order.date.getDate()
+        const orderToDate = new Date(order.date)
+
+        const orderYear = orderToDate.getFullYear()
+        const orderMonth = orderToDate.getMonth()
+        const orderDate = orderToDate.getDate()
 
         const isTodayOrder = orderYear === todayYear
         && todayMonth === orderMonth

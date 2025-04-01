@@ -1,9 +1,9 @@
-import {Alert, Button, Form, Input, Layout} from 'antd'
+import {Alert, Button, Checkbox, Form, Input, Layout} from 'antd'
 import { getAuth, signInWithEmailAndPassword  } from 'firebase/auth'
-import { firebaseApp } from '../../utils/firebaseInit'
+import { firebaseApp } from '../../utils/firebase/firebaseInit'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { IUserState, setUserState } from '../../store/userSlice'
+import { setUserId } from '../../store/userSlice'
 import { saveLocalStorageData } from '../../utils'
 
 const {Item} = Form
@@ -11,16 +11,24 @@ const {Item} = Form
 export const LogIn = () => {
     const dispatch = useDispatch()
     const [error, setError] = useState('')
+    const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
     const auth = getAuth(firebaseApp)
     const [form] = Form.useForm();
+
+    const onCheckboxChange = () => {
+        setIsCheckboxChecked(prev => !prev)
+    }
 
     const onFinish = (fieldsValue: any) => {
         signInWithEmailAndPassword(auth, fieldsValue.email, fieldsValue.password)
         .then((userCredential) => {
-            const userData: IUserState = {id: userCredential.user.uid, role: 'USER'}
+            console.log(userCredential.user)
             
-            dispatch(setUserState(userData))
-            saveLocalStorageData('user', userData)
+            dispatch(setUserId(userCredential.user.uid))
+
+            if (isCheckboxChecked) {
+                saveLocalStorageData('userId', userCredential.user.uid)
+            }
         })
         .catch((error) => setError(error.code))
     };
@@ -58,6 +66,10 @@ export const LogIn = () => {
                     rules={[{ required: true, message: 'Please input your password!' }]}
                 >
                     <Input.Password />
+                </Item>
+
+                <Item label="Запомнить брузер" className='formItemCheckbox'>
+                    <Checkbox onChange={onCheckboxChange}>Запомнить браузер</Checkbox>
                 </Item>
 
                 <Item label={null}>

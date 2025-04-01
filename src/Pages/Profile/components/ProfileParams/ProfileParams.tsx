@@ -2,9 +2,9 @@ import { PlusOutlined } from "@ant-design/icons"
 import { Typography, Flex, Tag, Tooltip, List, Empty } from "antd"
 import { useState } from "react"
 import { AppModal } from "../../../../components"
-import { CompanyBranchType, UserDataType } from "../../types"
 import { ProfileParamsChart } from "../ProfileParammsChart"
 import { getResultUserInfo } from "./getResultUserInfo"
+import { CompanyBranchType, UserDataType } from "../../../../store/userSlice"
 
 const {Title} = Typography
 const {Item} = List

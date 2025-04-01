@@ -7,7 +7,7 @@ import { getLocalStorageItem, useTypedSelector } from '../../utils';
 import { LogIn, SignUp } from '../../Pages';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUserState } from '../../store/userSlice';
+import { setUserId } from '../../store/userSlice';
 
 
 
@@ -16,10 +16,10 @@ export const AppLayout = () => {
   const {id} = useTypedSelector(store => store.userSlice)
 
   useEffect(() => {
-    const userData = getLocalStorageItem('user')
+    const userId = getLocalStorageItem('userId')
 
-    if (userData) {
-      dispatch(setUserState(userData))
+    if (userId) {
+      dispatch(setUserId(userId))
     }
   }, [])
 
@@ -44,7 +44,8 @@ export const AppLayout = () => {
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center',
-            }} 
+            }}
+            className='logInLayout'
         >
           <Tabs items={items} centered/>
         </Layout>
