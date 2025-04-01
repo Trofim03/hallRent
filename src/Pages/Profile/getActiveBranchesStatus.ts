@@ -1,5 +1,5 @@
 import { UserDataType } from "../../store/userSlice"
-import { getArrayFromMapSet } from "../../utils"
+import { getArrayFromMapSet, getDateByFragments } from "../../utils"
 
 export const getActiveBranchesStatus = (userData: UserDataType) => {
     const notActiveTodayBranches = new Map()
@@ -9,16 +9,12 @@ export const getActiveBranchesStatus = (userData: UserDataType) => {
 
     const today = new Date()
 
-    const todayYear = today.getFullYear()
-    const todayMonth = today.getMonth()
-    const todayDate = today.getDate()
+    const [todayYear,todayMonth,todayDate] = getDateByFragments(today)
 
     userData.ordersData.forEach(order => {
         const orderToDate = new Date(order.date)
 
-        const orderYear = orderToDate.getFullYear()
-        const orderMonth = orderToDate.getMonth()
-        const orderDate = orderToDate.getDate()
+        const [orderYear, orderMonth, orderDate] = getDateByFragments(orderToDate)
 
         const isTodayOrder = orderYear === todayYear
         && todayMonth === orderMonth

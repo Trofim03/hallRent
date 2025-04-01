@@ -1,0 +1,1 @@
+export const getFormattedNumber = (num: number) => num > 9 ? String(num) : `0${num}` 

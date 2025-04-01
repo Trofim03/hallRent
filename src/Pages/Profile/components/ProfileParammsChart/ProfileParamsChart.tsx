@@ -1,22 +1,19 @@
 import { Line } from "@ant-design/charts"
 import { CompanyOrderType } from "../../../../store/userSlice"
+import { getDateByFragments, getFormattedNumber } from "../../../../utils"
 
 type ProfileParamsChartProps = {
     ordersData: CompanyOrderType[]
 }
-
-const getFormattedNumber = (num: number) => num > 9 ? String(num) : `0${num}` 
 
 export const ProfileParamsChart = ({ordersData}: ProfileParamsChartProps) => {
     const ordersByDay: {[key: string]: number} = {}
 
     ordersData.forEach((order) => {
         const orderDate = new Date(order.date)
-        const orderYear = orderDate.getFullYear()
-        const orderMonth = getFormattedNumber(orderDate.getMonth() + 1)
-        const orderDay = getFormattedNumber(orderDate.getDate())
+        const [orderYear, orderMonth, orderDay] = getDateByFragments(orderDate)
 
-        const orderDateString = `${orderDay}.${orderMonth}.${orderYear}`
+        const orderDateString = `${orderDay}.${getFormattedNumber(orderMonth + 1)}.${getFormattedNumber(orderYear)}`
 
         const key = `${order.branchName}-${orderDateString}`
 

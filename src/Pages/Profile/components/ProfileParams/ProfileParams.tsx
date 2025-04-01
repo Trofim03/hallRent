@@ -82,9 +82,9 @@ export const ProfileParams = () => {
                             return (
                             <Tooltip key={el.name} title={toolTipTitle}>
                                 <Tag
-                                color={isBranchActive ? 'red' : 'green'} 
-                                closable 
-                                onClose={(e) => onTagDelete(e, el)}
+                                    color={isBranchActive ? 'red' : 'green'} 
+                                    closable 
+                                    onClose={(e) => onTagDelete(e, el)}
                                 >
                                     {el.name}
                                 </Tag>
