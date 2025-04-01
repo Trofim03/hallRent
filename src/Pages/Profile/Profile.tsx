@@ -6,13 +6,16 @@ import { HallMap } from '../../components';
 import { getActiveBranchesStatus } from './getActiveBranchesStatus';
 import { useEffect, useState } from 'react';
 import { doc,  getDoc, getFirestore} from 'firebase/firestore';
-import { UserDataType } from '../../store/userSlice';
+import { setUserBranchesActiveData, setUserData, UserDataType } from '../../store/userSlice';
+import { useDispatch } from 'react-redux';
 
 const {Title} = Typography
 
 export const Profile = () => {
+    const  dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(true)
-    const [userData, setUserData] = useState<UserDataType | null>(null)
+    const [userRequestData, setUserRequestData] = useState<UserDataType | null>(null)
+    const [todayBranchesData, setTodayBranchesData] = useState<{[key: string]: string[]}>({ activeTodayBranches: [], notActiveTodayBranches: []})
     const {id} = useTypedSelector(store => store.userSlice)
 
     useEffect(() => {
@@ -20,34 +23,41 @@ export const Profile = () => {
             const firebaseDBRef = doc(getFirestore() as any, `users`, id);
     
             getDoc(firebaseDBRef).then((snapshot) => {
-                setUserData(snapshot.data() as UserDataType)
+                setUserRequestData(snapshot.data() as UserDataType)
                 setIsLoading(false)
             })
         }
     }, [])
 
-    if (userData && !isLoading) {
-        const {
-            activeTodayBranches,
-            notActiveTodayBranches
-        } = getActiveBranchesStatus(userData)
-    
-        const placeMarksData = userData.companyBranches.map(el => ({
+    useEffect(() => {
+        if (userRequestData) {
+            const {
+                activeTodayBranches,
+                notActiveTodayBranches
+            } = getActiveBranchesStatus(userRequestData)
+
+            setTodayBranchesData(
+                {
+                    activeTodayBranches,
+                    notActiveTodayBranches
+                }
+            )
+            dispatch(setUserBranchesActiveData({ activeTodayBranches, notActiveTodayBranches}))
+            dispatch(setUserData(userRequestData))
+        }
+    }, [userRequestData])
+
+    if (userRequestData && !isLoading) {    
+        const placeMarksData = userRequestData.companyBranches.map(el => ({
                 ...el, 
-                color: activeTodayBranches.includes(el.name) ? 'red' : 'green'
+                color: todayBranchesData.activeTodayBranches.includes(el.name) ? 'red' : 'green'
             })
         )
     
         return (
             <Layout className="profileMainLayout">
-                <Title level={3}>{userData.companyName}</Title>
-                <ProfileParams 
-                    userData={{
-                        ...userData, 
-                        activeTodayBranches, 
-                        notActiveTodayBranches
-                    }} 
-                />
+                <Title level={3}>{userRequestData.companyName}</Title>
+                <ProfileParams />
                 <div className="profileInfo">
                     <HallMap placeMarksData={placeMarksData}/>
                 </div>

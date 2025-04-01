@@ -4,27 +4,19 @@ import { useState } from "react"
 import { AppModal } from "../../../../components"
 import { ProfileParamsChart } from "../ProfileParammsChart"
 import { getResultUserInfo } from "./getResultUserInfo"
-import { CompanyBranchType, UserDataType } from "../../../../store/userSlice"
+import { CompanyBranchType } from "../../../../store/userSlice"
+import { useTypedSelector } from "../../../../utils"
 
 const {Title} = Typography
 const {Item} = List
 
-type ProfileParamsProps = {
-    userData: UserDataType & {
-        activeTodayBranches: string[], 
-        notActiveTodayBranches: string[]
-    }
-}
-
-export const ProfileParams = ({userData}: ProfileParamsProps) => {
+export const ProfileParams = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [branchToDeleteData, setBranchToDeleteData] = useState<CompanyBranchType | null>(null)
+    const {userData, branchesActiveData} = useTypedSelector(store => store.userSlice)
 
-    const {
-        activeTodayBranches,
-        ordersData,
-        notActiveTodayBranches
-    } = userData
+    const {ordersData} = userData
+    const {activeTodayBranches, notActiveTodayBranches} = branchesActiveData
 
     const {
         minPrice,

@@ -21,9 +21,7 @@ export const LogIn = () => {
 
     const onFinish = (fieldsValue: any) => {
         signInWithEmailAndPassword(auth, fieldsValue.email, fieldsValue.password)
-        .then((userCredential) => {
-            console.log(userCredential.user)
-            
+        .then((userCredential) => {            
             dispatch(setUserId(userCredential.user.uid))
 
             if (isCheckboxChecked) {
