@@ -1,3 +1,21 @@
+import { CompanyOrderType } from "../store/userSlice";
+
+const getRandomOrdersCount = (branchName: string, date: string) => {
+    const count = Number((1 + Math.random() * (5 + 1 - 1)).toFixed());
+
+    const resultArr: CompanyOrderType[] = []
+
+    for (let i = 0; i < count; i++) {
+        resultArr.push({
+            "branchName": branchName,
+            "orderDuration": 2,
+            "date": date
+        })
+    }
+
+    return resultArr
+}
+
 export const logInMock = {
     "user": {
         "uid": "il2Eb4s0rxc2ySYfk5Rw3QXV0MF3",
@@ -92,22 +110,11 @@ export const userDataMock = {
         ],
         "companyName": "Макдональдс",
         "ordersData": [
-            {
-                "branchName": "ТРК \"Сибирь\"",
-                "orderDuration": 2,
-                "date": "2025-04-03T02:30:00.000Z"
-            },
-            {
-                "date": "2025-04-03T05:30:00.000Z",
-                "branchName": "ТРК \"Сибирь\"",
-                "orderDuration": 1
-            },
-            {
-                "branchName": "ТРК \"Сибирь\"",
-                "date": "2025-04-05T02:30:00.000Z",
-                "orderDuration": 5
-            }
+            ...getRandomOrdersCount('ТРК "Сибирь"', new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()),
+            ...getRandomOrdersCount('ТРК "Сибирь"', new Date().toISOString()),
+            ...getRandomOrdersCount('ТРК "Сибирь"', new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()),
         ],
         "role": "LESSOR"
     })
 }
+

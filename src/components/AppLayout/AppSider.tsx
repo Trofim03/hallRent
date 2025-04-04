@@ -1,6 +1,6 @@
 import { Layout, Menu, MenuProps } from "antd"
 import {
-    UserOutlined, LogoutOutlined
+    UserOutlined, LogoutOutlined, HomeOutlined
 } from '@ant-design/icons';
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,11 @@ const items: MenuItem[] = [
     icon: <UserOutlined />
   },
   {
+    label: <NavLink to='/user_halls'>Мои помещения</NavLink>, 
+    key: 'userHalls', 
+    icon: <HomeOutlined />
+  },
+  {
     label: 'Выйти', 
     key: 'logOut', 
     icon: <LogoutOutlined />
@@ -27,7 +32,7 @@ export const AppSider = () => {
   const dispatch = useDispatch()
 
   const onItemSelect = ({key}: {key: string}) => {
-    if (key === items[1]?.key) {
+    if (key === items[items.length - 1]?.key) {
       dispatch(clearUserState())
       localStorage.removeItem('userId')
     }

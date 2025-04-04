@@ -1,6 +1,6 @@
 import { HashRouter, Route, Routes } from "react-router-dom"
 import { AppLayout } from "./components"
-import { Profile } from "./Pages"
+import { Profile, UserHalls } from "./Pages"
 
 export const AppRouter = () => {
     return (
@@ -8,6 +8,7 @@ export const AppRouter = () => {
             <Routes>
                 <Route path="/" element={<AppLayout />}>
                     <Route path="/" element={<Profile />} />
+                    <Route path="/user_halls" element={<UserHalls />} />
                 </Route>
             </Routes>
         </HashRouter>

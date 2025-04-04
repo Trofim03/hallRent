@@ -1,18 +1,12 @@
-import { PlusOutlined } from "@ant-design/icons"
 import { Typography, Flex, Tag, Tooltip, List, Empty } from "antd"
-import { useState } from "react"
-import { AppModal } from "../../../../components"
 import { ProfileParamsChart } from "../ProfileParammsChart"
 import { getResultUserInfo } from "./getResultUserInfo"
-import { CompanyBranchType } from "../../../../store/userSlice"
 import { useTypedSelector } from "../../../../utils"
 
 const {Title} = Typography
 const {Item} = List
 
 export const ProfileParams = () => {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const [branchToDeleteData, setBranchToDeleteData] = useState<CompanyBranchType | null>(null)
     const {userData, branchesActiveData} = useTypedSelector(store => store.userSlice)
 
     const {ordersData} = userData
@@ -23,38 +17,9 @@ export const ProfileParams = () => {
         maxPrice,
         totalSizePremises
     } = getResultUserInfo(userData)
-
-    const onBranchAdd = () => {
-        setIsDrawerOpen(true)
-    }
-
-    const setDrawerClose = () => {
-        setIsDrawerOpen(false)
-    }
-
-    const onTagDelete = (e: any, tag: any) => {
-        e.preventDefault();
-        setBranchToDeleteData(tag)
-    }
-
-    const onModalClose = () => {
-        setBranchToDeleteData(null)
-    }
     
     return (
         <>
-            <AppModal 
-                open={Boolean(branchToDeleteData)} 
-                title={`Вы действительно хотите удалить филиал "${branchToDeleteData?.name}"?`}
-                onClose={onModalClose}
-            >
-                <Flex vertical>
-                    <Tooltip><b>Адрес:</b> {branchToDeleteData?.address}</Tooltip>
-                </Flex>
-            </AppModal>
-            <AppModal open={isDrawerOpen} onClose={setDrawerClose} title={'Добавить филиал'}>
-                123
-            </AppModal>
             <div className="profileParams">
                 <div>
                     <Title level={4}>Характеристики компании</Title>
@@ -82,18 +47,13 @@ export const ProfileParams = () => {
                             return (
                             <Tooltip key={el.name} title={toolTipTitle}>
                                 <Tag
-                                    color={isBranchActive ? 'red' : 'green'} 
-                                    closable 
-                                    onClose={(e) => onTagDelete(e, el)}
+                                    color={isBranchActive ? 'red' : 'green'}
                                 >
                                     {el.name}
                                 </Tag>
                             </Tooltip>
                         )
                         })}
-                        <Tag icon={<PlusOutlined />} onClick={onBranchAdd} className='branchAddTag'>
-                            Добавить
-                        </Tag>
                     </Flex>
                     {!ordersData.length ? 
                     <Empty description={'Отсутствуют заказы для отображения'} style={{marginTop: 30}} /> 

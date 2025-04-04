@@ -1,6 +1,7 @@
 import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps';
 import './HallMap.scss'
 import { CompanyBranchType } from '../../store/userSlice';
+import { Empty } from 'antd';
 
 type PlaceMarkType = CompanyBranchType & {color: string}
 
@@ -11,6 +12,10 @@ type HallMapProps = {
 }
 
 export const HallMap = ({placeMarksData, onMarkClick, onMapClick}: HallMapProps) => {
+    if (!placeMarksData.length) {
+        return <Empty description={'Отсутствуют помещения для отображения'} />
+    }
+
     const defaultCoords = [55.684758, 37.738521];
 
     const getCenterByCoords = () => {
