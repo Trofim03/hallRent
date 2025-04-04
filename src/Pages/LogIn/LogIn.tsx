@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setUserId } from '../../store/userSlice'
 import { saveLocalStorageData } from '../../utils'
+import { userLogIn } from '../../api'
 
 const {Item} = Form
 
@@ -12,7 +13,6 @@ export const LogIn = () => {
     const dispatch = useDispatch()
     const [error, setError] = useState('')
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
-    const auth = getAuth(firebaseApp)
     const [form] = Form.useForm();
 
     const onCheckboxChange = () => {
@@ -20,8 +20,8 @@ export const LogIn = () => {
     }
 
     const onFinish = (fieldsValue: any) => {
-        signInWithEmailAndPassword(auth, fieldsValue.email, fieldsValue.password)
-        .then((userCredential) => {            
+        userLogIn(fieldsValue.email, fieldsValue.password)
+        .then((userCredential) => {
             dispatch(setUserId(userCredential.user.uid))
 
             if (isCheckboxChecked) {

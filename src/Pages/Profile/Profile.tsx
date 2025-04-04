@@ -5,9 +5,9 @@ import { ProfileParams } from './components';
 import { HallMap } from '../../components';
 import { getActiveBranchesStatus } from './getActiveBranchesStatus';
 import { useEffect, useState } from 'react';
-import { doc,  getDoc, getFirestore} from 'firebase/firestore';
 import { setUserBranchesActiveData, setUserData, UserDataType } from '../../store/userSlice';
 import { useDispatch } from 'react-redux';
+import { getUserData } from '../../api';
 
 const {Title} = Typography
 
@@ -20,9 +20,7 @@ export const Profile = () => {
 
     useEffect(() => {
         if (id) {
-            const firebaseDBRef = doc(getFirestore() as any, `users`, id);
-    
-            getDoc(firebaseDBRef).then((snapshot) => {
+            getUserData(id).then((snapshot) => {
                 setUserRequestData(snapshot.data() as UserDataType)
                 setIsLoading(false)
             })
