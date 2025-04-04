@@ -1,18 +1,18 @@
 import {Layout, Tabs} from 'antd'
 import './AppLayout.scss'
-
 import { AppSider } from './AppSider';
-import { AppContent } from './AppContent';
 import { getLocalStorageItem, useTypedSelector } from '../../utils';
 import { LogIn, SignUp } from '../../Pages';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUserId } from '../../store/userSlice';
+import { Outlet, useNavigate } from 'react-router-dom';
 
-
+const {Content} = Layout
 
 export const AppLayout = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const {id} = useTypedSelector(store => store.userSlice)
 
   useEffect(() => {
@@ -20,6 +20,10 @@ export const AppLayout = () => {
 
     if (userId) {
       dispatch(setUserId(userId))
+    }
+
+    return () => {
+      navigate('/')
     }
   }, [])
 
@@ -55,9 +59,9 @@ export const AppLayout = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <AppSider />
-      <Layout>
-        <AppContent />
-      </Layout>
+      <Content style={{ padding: '15px', maxHeight: '100vh' }}>
+        <Outlet key={location.pathname} />
+      </Content>
     </Layout>
   )
 }

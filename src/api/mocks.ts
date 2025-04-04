@@ -103,8 +103,8 @@ export const userDataMock = {
                 "name": "ТРК \"Сибирь\"",
                 "premisesSize": 40,
                 "coords": [
-                    55,
-                    37
+                    55.7,
+                    37.5
                 ]
             }
         ],
