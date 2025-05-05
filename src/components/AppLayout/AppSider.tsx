@@ -2,7 +2,7 @@ import { Layout, Menu, MenuProps } from "antd"
 import {
     UserOutlined, LogoutOutlined, HomeOutlined
 } from '@ant-design/icons';
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUserState } from "../../store/userSlice";
 
@@ -13,12 +13,12 @@ type MenuItem = Required<MenuProps>['items'][number];
 const items: MenuItem[] = [
   {
     label: <NavLink to='/'>Профиль</NavLink>, 
-    key: 'profile', 
+    key: '/', 
     icon: <UserOutlined />
   },
   {
     label: <NavLink to='/user_halls'>Мои помещения</NavLink>, 
-    key: 'userHalls', 
+    key: '/user_halls', 
     icon: <HomeOutlined />
   },
   {
@@ -29,6 +29,7 @@ const items: MenuItem[] = [
 ];
 
 export const AppSider = () => {
+  const location = useLocation()
   const dispatch = useDispatch()
 
   const onItemSelect = ({key}: {key: string}) => {
@@ -40,7 +41,7 @@ export const AppSider = () => {
   
     return (
         <Sider collapsible>
-            <Menu mode="inline" items={items} theme="dark" defaultSelectedKeys={['profile']} onClick={onItemSelect}/>
+            <Menu mode="inline" items={items} theme="dark" defaultSelectedKeys={[location.pathname]} onClick={onItemSelect}/>
         </Sider>
     )
 }

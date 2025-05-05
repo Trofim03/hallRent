@@ -5,30 +5,32 @@ import { YMaps, Map, Placemark } from "@iminside/react-yandex-maps"
 import './UserHalls.scss'
 import { CalendarOutlined } from "@ant-design/icons"
 import { useState } from "react"
-import { AppModal } from "../../components"
+import { AppModal, UserHallModalContent } from "../../components"
+import { CompanyOrderType } from "../../store/userSlice"
 
 const {Title} = Typography
 const {Item} = List
 
 type OrdersByDateType = {
-    [key: string]: {
-        time: string,
-        duration: number
-    }[]
+    [key: string]: (CompanyOrderType & {time: string})[]
 }
 
 export const UserHalls = () => {
-    const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false)
+    const [calendarModalBranchName, setCalendarModalBranchName] = useState<string>('')
     const {companyBranches, ordersData} = useTypedSelector(store => store.userSlice.userData)
 
-    const onCalendarBtnClick = () => {
-        setIsCalendarModalOpen(true)
+    const onCalendarBtnClick = (branchName: string) => {
+        setCalendarModalBranchName(branchName)
+    }
+    
+    const handleModalClose = () => {
+        setCalendarModalBranchName('')
     }
 
     const getClosestOrdersList = (branchName: string) => {
         const [todayYear, todayMonth, todayDate] = getDateByFragments(new Date())
 
-        const closestOrders = ordersData.filter(order => {
+        const closestOrders = ordersData[branchName].filter(order => {
             const [orderYear, orderMonth, orderDate] = getDateByFragments(new Date(order.date))
 
             const orderInBranch = order.branchName === branchName
@@ -47,8 +49,8 @@ export const UserHalls = () => {
             const key = `${getFormattedNumber(orderDate)}.${getFormattedNumber(orderMonth + 1)}.${orderYear}`
 
             const orderObj = {
+                ...order,
                 time: `${getFormattedNumber(valueHours)}:${getFormattedNumber(valueMinutes)}`,
-                duration: order.orderDuration
             }
 
             if (!ordersByDate[key]) {
@@ -59,13 +61,14 @@ export const UserHalls = () => {
         })
 
         return Object.keys(ordersByDate).map(key => (
-            <div>
+            <div key={key}>
                 <Title level={5}>{key}</Title>
                 <List bordered className="closestOrdersList">
                     {ordersByDate[key].map(order => (
-                        <Item>
+                        <Item key={order.time}>
                             <span>Время: <Tag>{order.time}</Tag></span>
-                            <span>Длительность: <Tag>{order.duration}</Tag></span>
+                            <span>Заказчик: <Tag>{order.buyerName}</Tag></span>
+                            <span>Длительность: <Tag>{order.orderDuration}ч </Tag></span>
                         </Item>
                     ))}
                 </List>
@@ -76,11 +79,11 @@ export const UserHalls = () => {
     return (
         <>
             <AppModal
-                onClose={() => {}}
-                title={'123'}
-                open={isCalendarModalOpen}
+                onClose={handleModalClose}
+                title={calendarModalBranchName ?? ''}
+                open={Boolean(calendarModalBranchName)}
             >
-                123
+                <UserHallModalContent branchName={calendarModalBranchName}/>
             </AppModal>
             <Layout className="userHallsLayout">
                 {companyBranches.map(branch => {
@@ -100,7 +103,7 @@ export const UserHalls = () => {
                                     <Title level={4}>
                                         Ближайшие заказы
                                         <Tooltip title="Подробнее">
-                                            <Button onClick={onCalendarBtnClick}>
+                                            <Button onClick={() => onCalendarBtnClick(branch.name)}>
                                                 <CalendarOutlined />
                                             </Button>
                                         </Tooltip>

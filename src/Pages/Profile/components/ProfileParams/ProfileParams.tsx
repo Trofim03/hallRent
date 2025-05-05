@@ -55,7 +55,7 @@ export const ProfileParams = () => {
                         )
                         })}
                     </Flex>
-                    {!ordersData.length ? 
+                    {!Object.keys(ordersData).length ? 
                     <Empty description={'Отсутствуют заказы для отображения'} style={{marginTop: 30}} /> 
                     : <ProfileParamsChart ordersData={ordersData} /> 
                     }

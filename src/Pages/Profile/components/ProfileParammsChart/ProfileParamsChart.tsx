@@ -1,10 +1,10 @@
 import { Line } from "@ant-design/charts"
-import { CompanyOrderType } from "../../../../store/userSlice"
-import { getDateByFragments, getFormattedNumber } from "../../../../utils"
+import { UserDataType } from "../../../../store/userSlice"
+import { getAllOrdersDataArr, getDateByFragments, getFormattedNumber } from "../../../../utils"
 import { renderToString } from "react-dom/server"
 
 type ProfileParamsChartProps = {
-    ordersData: CompanyOrderType[]
+    ordersData: UserDataType['ordersData']
 }
 
 type TooltipItemType = {
@@ -22,7 +22,7 @@ type SortedItemsType = {
 export const ProfileParamsChart = ({ordersData}: ProfileParamsChartProps) => {
     const ordersByDay: {[key: string]: number} = {}
 
-    ordersData.forEach((order) => {
+    getAllOrdersDataArr(ordersData).forEach((order) => {
         const orderDate = new Date(order.date)
         const [orderYear, orderMonth, orderDay] = getDateByFragments(orderDate)
 

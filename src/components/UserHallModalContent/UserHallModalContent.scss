@@ -1,0 +1,15 @@
+.calendarOrderLine {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:nth-child(even) {
+    background: rgba(60, 90, 100, 0.04);
+  }
+
+  & > span:first-child {
+    width: 55%;
+    text-align: center;
+  }
+}

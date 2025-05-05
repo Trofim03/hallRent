@@ -3,17 +3,6 @@ body {
   padding: 0;
 }
 
-*:has(> .ant-spin) {
-  position: relative;
-
-  .ant-spin {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
-
 ul {
   list-style: none;
   padding-left: 5px;

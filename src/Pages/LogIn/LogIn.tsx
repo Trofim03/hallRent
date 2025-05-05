@@ -1,6 +1,4 @@
 import {Alert, Button, Checkbox, Form, Input, Layout} from 'antd'
-import { getAuth, signInWithEmailAndPassword  } from 'firebase/auth'
-import { firebaseApp } from '../../utils/firebase/firebaseInit'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setUserId } from '../../store/userSlice'

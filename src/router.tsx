@@ -7,7 +7,7 @@ export const AppRouter = () => {
         <HashRouter>
             <Routes>
                 <Route path="/" element={<AppLayout />}>
-                    <Route path="/" element={<Profile />} />
+                    <Route index element={<Profile />} />
                     <Route path="/user_halls" element={<UserHalls />} />
                 </Route>
             </Routes>

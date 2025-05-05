@@ -1,19 +1,21 @@
-import {Layout, Tabs} from 'antd'
+import {Layout, Spin, Tabs} from 'antd'
 import './AppLayout.scss'
 import { AppSider } from './AppSider';
 import { getLocalStorageItem, useTypedSelector } from '../../utils';
-import { LogIn, SignUp } from '../../Pages';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUserId } from '../../store/userSlice';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { setUserBranchesActiveData, setUserData, setUserId } from '../../store/userSlice';
+import { Outlet } from 'react-router-dom';
+import { loginTabsItems } from './constants';
+import { getActiveBranchesStatus } from '../../Pages/Profile/getActiveBranchesStatus';
+import { getUserDataRequestAction } from '../../utils/api/getUserDataRequestAction';
 
 const {Content} = Layout
 
 export const AppLayout = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const {id} = useTypedSelector(store => store.userSlice)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const userId = getLocalStorageItem('userId')
@@ -21,26 +23,26 @@ export const AppLayout = () => {
     if (userId) {
       dispatch(setUserId(userId))
     }
-
-    return () => {
-      navigate('/')
-    }
   }, [])
 
-  if (!id) {
-    const items = [
-      {
-        key: 'logIn',
-        label: 'Войти',
-        children: <LogIn />,
-      },
-      {
-        key: 'signUp',
-        label: 'Регистрация',
-        children: <SignUp />,
-      }
-    ];
+  useEffect(() => {
+    if (id) {
+      setIsLoading(true)
+      getUserDataRequestAction(id).then((userDataResponse) => {
+        const {
+            activeTodayBranches,
+            notActiveTodayBranches
+        } = getActiveBranchesStatus(userDataResponse)
+  
+        dispatch(setUserBranchesActiveData({ activeTodayBranches, notActiveTodayBranches}))
+        dispatch(setUserData(userDataResponse))
 
+        setIsLoading(false)
+      })
+    }
+  }, [id])
+
+  if (!id) {
     return (
       <Layout 
         style={{ 
@@ -51,17 +53,19 @@ export const AppLayout = () => {
             }}
             className='logInLayout'
         >
-          <Tabs items={items} centered/>
+          <Tabs items={loginTabsItems} centered/>
         </Layout>
     )
   }
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <AppSider />
-      <Content style={{ padding: '15px', maxHeight: '100vh' }}>
-        <Outlet key={location.pathname} />
-      </Content>
-    </Layout>
+    <Spin size='large' spinning={isLoading}>
+      <Layout style={{ minHeight: '100vh' }}>
+        <AppSider />
+        <Content style={{ padding: '15px', maxHeight: '100vh' }}>
+          <Outlet key={location.pathname} />
+        </Content>
+      </Layout>
+    </Spin>
   )
 }

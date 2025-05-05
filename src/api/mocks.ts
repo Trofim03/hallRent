@@ -1,5 +1,9 @@
 import { CompanyOrderType } from "../store/userSlice";
 
+const buyersNames = ['Виктор', 'Алёна', 'Игорь']
+
+const getRandomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
+
 const getRandomOrdersCount = (branchName: string, date: string) => {
     const count = Number((1 + Math.random() * (5 + 1 - 1)).toFixed());
 
@@ -9,7 +13,8 @@ const getRandomOrdersCount = (branchName: string, date: string) => {
         resultArr.push({
             "branchName": branchName,
             "orderDuration": 2,
-            "date": date
+            "date": date,
+            'buyerName': buyersNames[getRandomNumber(0, buyersNames.length - 1)]
         })
     }
 
@@ -109,11 +114,13 @@ export const userDataMock = {
             }
         ],
         "companyName": "Макдональдс",
-        "ordersData": [
-            ...getRandomOrdersCount('ТРК "Сибирь"', new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()),
-            ...getRandomOrdersCount('ТРК "Сибирь"', new Date().toISOString()),
-            ...getRandomOrdersCount('ТРК "Сибирь"', new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()),
-        ],
+        "ordersData": {
+            'ТРК "Сибирь"': [
+                ...getRandomOrdersCount('ТРК "Сибирь"', new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()),
+                ...getRandomOrdersCount('ТРК "Сибирь"', new Date().toISOString()),
+                ...getRandomOrdersCount('ТРК "Сибирь"', new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()),
+            ]
+        },
         "role": "LESSOR"
     })
 }

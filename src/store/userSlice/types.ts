@@ -11,13 +11,14 @@ export type UserRoleType = 'ADMIN' | 'USER' | 'LESSOR' | null
 export type CompanyOrderType = {
     branchName: string,
     date: string,
-    orderDuration: number
+    orderDuration: number,
+    buyerName: string
 }
 
 export type UserDataType = {
     companyName: string,
     companyBranches: CompanyBranchType[],
-    ordersData: CompanyOrderType[],
+    ordersData: {[branchName: string]: CompanyOrderType[]},
     role: UserRoleType
 }
 

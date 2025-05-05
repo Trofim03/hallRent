@@ -1,52 +1,28 @@
-import { Layout, Spin, Typography } from 'antd';
-import { useTypedSelector } from "../../utils"
+import { Layout, Typography } from 'antd';
 import './Profile.scss'
 import { ProfileParams } from './components';
 import { HallMap } from '../../components';
-import { getActiveBranchesStatus } from './getActiveBranchesStatus';
 import { useEffect, useState } from 'react';
-import { setUserBranchesActiveData, setUserData, UserDataType } from '../../store/userSlice';
-import { useDispatch } from 'react-redux';
-import { getUserData } from '../../api';
+import { useTypedSelector } from '../../utils';
 
 const {Title} = Typography
 
 export const Profile = () => {
-    const  dispatch = useDispatch()
-    const [isLoading, setIsLoading] = useState(true)
-    const [userRequestData, setUserRequestData] = useState<UserDataType | null>(null)
     const [todayBranchesData, setTodayBranchesData] = useState<{[key: string]: string[]}>({ activeTodayBranches: [], notActiveTodayBranches: []})
-    const {id} = useTypedSelector(store => store.userSlice)
+    const {userData, branchesActiveData} = useTypedSelector(store => store.userSlice)
 
     useEffect(() => {
-        if (id) {
-            getUserData(id).then((snapshot) => {
-                setUserRequestData(snapshot.data() as UserDataType)
-                setIsLoading(false)
-            })
-        }
-    }, [])
-
-    useEffect(() => {
-        if (userRequestData) {
-            const {
-                activeTodayBranches,
-                notActiveTodayBranches
-            } = getActiveBranchesStatus(userRequestData)
 
             setTodayBranchesData(
                 {
-                    activeTodayBranches,
-                    notActiveTodayBranches
+                    activeTodayBranches: branchesActiveData.activeTodayBranches,
+                    notActiveTodayBranches: branchesActiveData.notActiveTodayBranches,
                 }
             )
-            dispatch(setUserBranchesActiveData({ activeTodayBranches, notActiveTodayBranches}))
-            dispatch(setUserData(userRequestData))
-        }
-    }, [userRequestData])
+    }, [branchesActiveData])
 
-    if (userRequestData && !isLoading) {    
-        const placeMarksData = userRequestData.companyBranches.map(el => ({
+    if (userData) {    
+        const placeMarksData = userData.companyBranches.map(el => ({
                 ...el, 
                 color: todayBranchesData.activeTodayBranches.includes(el.name) ? 'red' : 'green'
             })
@@ -54,7 +30,7 @@ export const Profile = () => {
     
         return (
             <Layout className="profileMainLayout">
-                <Title level={3}>{userRequestData.companyName}</Title>
+                <Title level={3}>{userData.companyName}</Title>
                 <ProfileParams />
                 <div className="profileInfo">
                     <HallMap placeMarksData={placeMarksData}/>
@@ -63,5 +39,5 @@ export const Profile = () => {
         )
     }
 
-    return <Spin size="large" />
+    return null
 }
